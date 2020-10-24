@@ -6,7 +6,7 @@ Created on Mon Oct 19 18:32:47 2020
 """
 import pandas as pd
 import numpy as np
-
+import matplotlib.pyplot as plt
 
 def read_pdb(filename):
 
@@ -176,9 +176,9 @@ def find_salt_bridges(dataframe, cutoff):
                 next
     return(salin)
 
-def contact_map(dataframe):
+def contact_map(dataframe, choix, out):
     
-    CA = select_atoms(dataframe, {"Atom_Name":["CA"]})
+    CA = select_atoms(dataframe, {"Atom_Name":["CA"],"chain_id":["A"]})
     ca_coord = CA[["X_Coordinates","Y_Coordinates","Z_Coordinates"]]
     
     matrix=np.zeros(((ca_coord.values).shape[0],(ca_coord.values).shape[0]))
@@ -188,8 +188,17 @@ def contact_map(dataframe):
     for i in range((ca_coord.values).shape[0]):
         for j in range((ca_coord.values).shape[0]):
             matrix[i,j]=np.sqrt(np.sum((n_df[i]-n_df[j])**2))
-            
-    import pylab
-    pylab.matshow(np.transpose(matrix))
-    pylab.colorbar()
-    pylab.show()
+    
+    if choix:
+        fig = plt.matshow(matrix, cmap = "rainbow")
+        ax1 = fig.axes
+        ax1.set_xlabel("Residue Number")
+        ax1.xaxis.set_label_position('top')
+        ax1.xaxis.tick_top()
+        ax1.set_ylabel("Residue Number")
+        plt.colorbar(label="distance")
+        plt.savefig(out)
+    else:
+        matrix = matrix < 10
+        fig = plt.matshow(matrix, cmap = "binary")
+        plt.savefig(out)

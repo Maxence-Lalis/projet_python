@@ -11,15 +11,10 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("-f", help="PDB input", type=str)
 parser.add_argument("-o", help="Name of output", type=str)
-parser.add_argument("-bw", help="black and white", action="store_true")
+parser.add_argument("-bw", help="Contact", action="store_false")
 args = parser.parse_args()
 
-b = "binary"
-r = "rainbow"
 df = read_pdb(args.f)
 
-if args.bw: 
-    contact_map(df, b, args.o)
-else:
-    contact_map(df, r, args.o)
+contact_map(df, args.bw, args.o)
     
