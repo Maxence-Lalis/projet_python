@@ -8,13 +8,17 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
+# Fonction read_pdb : Retourne un dataframe pandas, en prenant comme input un fichier .pdb.
 def read_pdb(filename):
-
+   
+    # Création des listes vides pour chaques coordonnées
     coord_x = []; coord_y = []; coord_z = []; res_number = []; res_name = []
     atom_name = [] ; chain_id = []; type_atom = []; alt_loc_ind = []
     atom_number = []; CIR = []; occupancy = []; T_factor = []; E_symbol = [] 
     charge = []
     
+    # Pour chaque ligne commencant par "ATOM" ou "HETATM", les coordonnées sont stockées
+    # dans les listes correspondantes
     with open(filename ,"r") as pdb:
         for line in pdb:
             if line.startswith("ATOM") or line.startswith("HETATM"):
@@ -34,6 +38,7 @@ def read_pdb(filename):
                 E_symbol.append(str(line[76:78].strip()))
                 charge.append(str(line[78:80].strip()))
         
+        # Création d'un dictionnaire comportant chacune des listes de coordonnées
         extract = {"Type":type_atom, "Atom_Serial_Number":atom_number, 
                    "Atom_Name":atom_name, 
                    "alternate_location_indicator":alt_loc_ind, 
@@ -44,25 +49,36 @@ def read_pdb(filename):
                    "Temperature_Factor":T_factor, "Element_Symbol":E_symbol, 
                    "Charge":charge}
         
+        # Transformation du dictionnaire en pandas DataFrame
         extract_dataframe = pd.DataFrame(extract)
         return(extract_dataframe)
     
 
-        
+# Fonction write_pdb: Ecris un fichier dans le format .pdb, en prenant comme
+# input un dataframe
 def write_pdb(new_file, dataframe):
     
+    # Pour chaque ligne du dataframe, les coordonnées sont écrites dans le format
+    # standard .pdb
     with open(new_file, "w+") as new:
         for i in dataframe.values:
             new.write("{:6s}{:5d} {:^4s}{:1s}{:3s} {:1s}{:4d}{:1s}   "
                       "{:8.3f}{:8.3f}{:8.3f}{:6.2f}{:6.2f}          "
                       "{:2>s}{:2s}\n".format(*i))
         new.write("TER")
-        
-    
+ 
+
+# Fonction select_atoms: Retourne un sous-ensemble de dataframe, à partir d'un dataframe
+# de base et de critères de sélections sous la forme d'un dictionnaire
 def select_atoms(df, selector):
     
+    # Les valeurs du dictionnaires doivent être en format liste
+    # Un dataframe temporaire est créer pour éviter de modifier le dataframe de base
     temp = df
     selection = pd.DataFrame()
+    
+    # Pour chaque clés du dictionnaire, toutes les lignes correspondant à ses valeurs
+    # sont jointes à un dataframe vide
     for keys, values in selector.items():
         for i in range(len(values)):
             selection = selection.append(temp[temp[keys] == values[i]])
@@ -75,7 +91,6 @@ def select_atoms(df, selector):
 def split_chains(pdbfile):
      
      with open(pdbfile ,"r") as pdb:
-         
          pdbfile = pdbfile.split(".")
          
          select = [ line for line in pdb if (line.startswith("ATOM") or \
