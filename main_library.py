@@ -7,6 +7,7 @@ Created on Mon Oct 19 18:32:47 2020
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from collections import OrderedDict
 
 # Fonction read_pdb : Retourne un dataframe pandas, en prenant comme input un fichier .pdb.
 def read_pdb(filename):
@@ -50,6 +51,7 @@ def read_pdb(filename):
                    "Charge":charge}
         
         # Transformation du dictionnaire en pandas DataFrame
+        extract = OrderedDict(extract)
         extract_dataframe = pd.DataFrame(extract)
         return(extract_dataframe)
     
