@@ -28,7 +28,7 @@ Split_chains est une fonction qui crée un fichier de coordonnées des atomes pa
 
 ### aa321()
 
-aa321 est une fonction qui à partir d'une liste d'acides aminés à 3 lettres, retournes une liste de séquences d'acides aminés à 1 lettres. 
+aa321 est une fonction qui à partir d'une liste d'acides aminés à 3 lettres, retournes une liste de séquences d'acides aminés à 1 lettre.
 
 ### get_aa_seq()
 
@@ -43,6 +43,10 @@ compute_distance est une fonction qui prend deux lignes d'un dataframe pandas, c
 Find_salt_bridges est une fonction qui prend comme argument un dataframe, composé des coordonnées atomiques d'un pdb ainsi qu'une valeur sous la forme d'un entier répresentant le cutoff. Cette fonction mesures toutes les distances deux à deux entres les atomes donneurs et accepteurs des acides aminés chargés. Si cette distance est en-dessous de la valeur du cutoff, la fonction considère la présence d'un pont salins et renvoie la paires d'acides aminés engagée dans cette liaison. Toutes les paires déterminés sont stockées dans une liste.
 
 ### contact_map()
+
+contact_map() est une fonction qui crée une carte de contact sous le format .png. Elle prend comme argument un dataframe, le nom du fichier .png à être créé et la valeur du cutoff. Chaque résidu est définis par son carbone alpha. La fonction considère qu'il y a contact si la distance entre deux carbones alpha est inférieure à la valeur du cutoff. Deux répresentation sont produites : une répresentation ou le "contact" est représenté de manière discontinue (noir contact, blanc pas de contact), l'autre représentation, présente le "contact" de manière continue avec une gradient de couleur en fonction de la distance. 
+
+## Les Scripts
 
 
 
